@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "unistd.h": "c",
+        "stdio.h": "c",
+        "stdint.h": "c",
+        "l3g4.h": "c",
+        "i2c-dev.h": "c",
+        "stddef.h": "c"
+    }
+}
