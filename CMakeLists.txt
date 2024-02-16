@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(l3g4_prj VERSION 1.0)
 
 # Set compiler flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -g -Wall -Werror")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -g -Wall -Werror")
 
 # Add preprocessor definitions
 add_definitions(-DDEBUG)
@@ -87,3 +87,6 @@ file(GLOB LINUX_HEADERS
 
 # Create the executable
 add_executable(l3g4_prj ${SOURCES} ${LINUX_HEADERS})
+
+# Generate .map file
+set_target_properties(l3g4_prj PROPERTIES LINK_FLAGS "-Wl,-Map=l3g4_prj.map")
