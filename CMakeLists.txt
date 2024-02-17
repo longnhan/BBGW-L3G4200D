@@ -16,6 +16,8 @@ set(SOURCES
     src/main.h
     user_driver/l3g4.c
     user_driver/l3g4.h
+    user_driver/i2c_driver.c
+    user_driver/i2c_driver.h
 )
 
 # Include directories
