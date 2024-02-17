@@ -1,16 +1,11 @@
 #ifndef __GYRO_L3G4200_H__
 #define __GYRO_L3G4200_H__
 
-#include <linux/i2c-dev.h>
-#include <linux/mmc/ioctl.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include "i2c_driver.h"
 
 #define DEVICE_I2C_ADR						0x69
 #define DEVICE_NAME							0x0F
-#define I2C_DEVICE "/dev/i2c-2"
+
 //read and write registers
 #define DEVICE_CTRL_REG_1					0x20
 #define DEVICE_CTRL_REG_2					0x21
@@ -53,9 +48,6 @@ enum bufferOperationMode
 	Stream_2_FIFO
 };
 
-extern void i2cInit(void);
-extern void i2cClose(uint8_t file);
-extern uint8_t getI2cData(int file, uint8_t regAddress, uint8_t *buf, uint8_t size);
-extern uint8_t sendI2cData(int file, uint8_t regAddress, uint8_t cmd);
+extern uint8_t readDeviceName(uint8_t *ptr);
 
-#endif
+#endif /*__GYRO_L3G4200_H__*/

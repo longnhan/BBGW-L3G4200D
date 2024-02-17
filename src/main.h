@@ -1,5 +1,8 @@
-#include "l3g4.h"
+#ifndef __MAIN_H__
+#define __MAIN_H__
 
-// typedef uint8_t u8;
-// typedef uint16_t u16;
-// typedef uint32_t u32;
+#include "l3g4.h"
+#include "i2c_driver.h"
+
+
+#endif /*__MAIN_H__*/
