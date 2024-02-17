@@ -4,13 +4,10 @@ echo ::::----------------------------::::
 
 cd ~/BB_Green/bt_usr/l3g4_prj/build/
 #clean existing files
-cmake --build . --target clean
-#create nesscesary files
-cmake ..
+rm -r *
 #set build type
-BUILD_TYPE="debug"
-#perform make
-cmake --build .
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make
 
 echo ::::----------------------------::::
 echo ::::           Finish           ::::

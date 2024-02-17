@@ -3,7 +3,7 @@ echo ::::Copy execution file tp BBGW::::
 echo ::::----------------------------::::
 echo -e "\n"
 cd ..
-scp -r build/ debian@192.168.7.2:~/
+scp -r build/ debian@192.168.7.2:~/l3g4_prj
 
 echo ::::----------------------------::::
 echo ::::-----------Finish-----------::::
