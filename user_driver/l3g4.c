@@ -4,7 +4,7 @@ void i2cInit(void)
 {
     int file;
     char filename[20];
-    char buf[10];
+    uint8_t buf[1]={0};
     printf("i2c Init\n");
     // Open the I2C bus
     sprintf(filename, "%s", I2C_DEVICE);
@@ -19,12 +19,25 @@ void i2cInit(void)
         perror("Failed to acquire bus access and/or talk to slave.");
         return 1;
     }
+    //init sensor read device name
+    getI2cData(file, DEVICE_NAME, buf, 1);
+    printf("devce name: 0x%x\n", buf[0]);
 }
-uint8_t getI2cData(uint8_t deviceAddress, uint8_t regAddress, uint8_t *buf)
+void i2cClose(uint8_t file)
 {
-    return 0;
+    close(file);
 }
-uint8_t sendI2cData(uint8_t deviceAddress, uint8_t regAddress, uint8_t cmd)
+uint8_t getI2cData(int file, uint8_t regAddress, uint8_t *buf, uint8_t size)
 {
-    return 0;
+    uint8_t ret = 0;
+    write(file, &regAddress, 1);
+    read(file, buf, size);
+    return ret;
+}
+uint8_t sendI2cData(int file, uint8_t regAddress, uint8_t cmd)
+{
+    uint8_t ret = 0;
+    write(file, &regAddress, 1);
+    write(file, &cmd, 1);
+    return ret;
 }

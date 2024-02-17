@@ -6,6 +6,7 @@
         "stdint.h": "c",
         "l3g4.h": "c",
         "i2c-dev.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "string.h": "c"
     }
 }
