@@ -47,6 +47,8 @@ uint8_t setDeviceMode(enum deviceOperationMode device_Mode)
 	case Device_Mode_Shutdown:
 		send_Ctrl_Reg1 = read_Ctrl_Reg1 & 0b11110111;
 		break;
+	default:
+		break;
 	}
     sendI2cData(DEVICE_CTRL_REG_1, send_Ctrl_Reg1);
     usleep(350000);
