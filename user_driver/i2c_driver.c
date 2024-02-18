@@ -27,6 +27,7 @@ void i2cClose(void)
 uint8_t getI2cData(uint8_t regAddress, uint8_t *buf, uint8_t size)
 {
     uint8_t ret = 0;
+
     write(i2c_File, &regAddress, 1);
     ret = read(i2c_File, buf, size);
     return ret;
@@ -34,7 +35,10 @@ uint8_t getI2cData(uint8_t regAddress, uint8_t *buf, uint8_t size)
 uint8_t sendI2cData(uint8_t regAddress, uint8_t cmd)
 {
     uint8_t ret = 0;
-    write(i2c_File, &regAddress, 1);
-    ret = write(i2c_File, &cmd, 1);
+    uint8_t send_Buf[2]={0};
+    send_Buf[0] = regAddress;
+    send_Buf[1] = cmd;
+
+    ret = write(i2c_File, send_Buf, 2);
     return ret;
 }
