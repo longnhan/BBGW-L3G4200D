@@ -49,5 +49,10 @@ enum bufferOperationMode
 };
 
 extern uint8_t readDeviceName(uint8_t *ptr);
+extern uint8_t readTemperature(int8_t *ptr);
+extern uint8_t setDeviceMode(enum deviceOperationMode device_Mode);
+extern uint8_t read_X_Axis(int16_t *ptr);
+extern uint8_t read_Y_Axis(int16_t *ptr);
+extern uint8_t read_Z_Axis(int16_t *ptr);
 
 #endif /*__GYRO_L3G4200_H__*/

@@ -56,15 +56,87 @@ uint8_t setDeviceMode(enum deviceOperationMode device_Mode)
 
 uint8_t read_X_Axis(int16_t *ptr)
 {
+    uint8_t isXAvailable=0;
+	uint8_t isXOverrun=0;
+	uint8_t upperData=0;
+	uint8_t lowerData=0;
+    uint8_t ret = 0;
+	//check if X-axis data is available
+	getI2cData(DEVICE_STATUS_REG, &isXAvailable, 1);
+    isXAvailable = isXAvailable & 0x1;
+	// check when overrun occurs
+    getI2cData(DEVICE_STATUS_REG, &isXOverrun, 1);
+	isXOverrun = (isXOverrun & 0x10) >>4;
+	
+    if((isXAvailable == 1) && (isXOverrun == 1))
+	{
+		getI2cData(DEVICE_OUT_X_H_REG, &upperData, 1);
+		getI2cData(DEVICE_OUT_X_L_REG, &lowerData, 1);
+		//data proccessing
+		*ptr = (int16_t)(((uint16_t)upperData << 8) | (uint16_t)lowerData);
 
+	}
+    else
+    {
+        ret = 1;
+    }
+	return ret;
 }
 
 uint8_t read_Y_Axis(int16_t *ptr)
 {
+    uint8_t isYAvailable=0;
+	uint8_t isYOverrun=0;
+	uint8_t upperData=0;
+	uint8_t lowerData=0;
+    uint8_t ret = 0;
+	//check if Y-axis data is available
+	getI2cData(DEVICE_STATUS_REG, &isYAvailable, 1);
+    isYAvailable = (isYAvailable & 0x2) >> 1;
+	// check when overrun occurs
+    getI2cData(DEVICE_STATUS_REG, &isYOverrun, 1);
+	isYOverrun = (isYOverrun & 0x20) >>5;
+	
+    if((isYAvailable == 1) && (isYOverrun == 1))
+	{
+		getI2cData(DEVICE_OUT_Y_H_REG, &upperData, 1);
+		getI2cData(DEVICE_OUT_Y_L_REG, &lowerData, 1);
+		//data proccessing
+		*ptr = (int16_t)(((uint16_t)upperData << 8) | (uint16_t)lowerData);
 
+	}
+    else
+    {
+        ret = 1;
+    }
+	return ret;
 }
 
 uint8_t read_Z_Axis(int16_t *ptr)
 {
+    uint8_t isZAvailable=0;
+	uint8_t isZOverrun=0;
+	uint8_t upperData=0;
+	uint8_t lowerData=0;
+    uint8_t ret = 0;
+	//check if Z-axis data is available
+	getI2cData(DEVICE_STATUS_REG, &isZAvailable, 1);
+    isZAvailable = (isZAvailable & 0x4) >> 2;
+	// check when overrun occurs
+    getI2cData(DEVICE_STATUS_REG, &isZOverrun, 1);
+	isZOverrun = (isZOverrun & 0x40) >>6;
+	
+    if((isZAvailable == 1) && (isZOverrun == 1))
+	{
+		getI2cData(DEVICE_OUT_Z_H_REG, &upperData, 1);
+		getI2cData(DEVICE_OUT_Z_L_REG, &lowerData, 1);
+		//data proccessing
+		*ptr = (int16_t)(((uint16_t)upperData << 8) | (uint16_t)lowerData);
 
+	}
+    else
+    {
+        ret = 1;
+    }
+	return ret;
 }
