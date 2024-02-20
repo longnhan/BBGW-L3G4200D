@@ -90,5 +90,8 @@ file(GLOB LINUX_HEADERS
 # Create the executable
 add_executable(l3g4_prj ${SOURCES} ${LINUX_HEADERS})
 
+# Link pthread library
+target_link_libraries(l3g4_prj pthread)
+
 # Generate .map file
 set_target_properties(l3g4_prj PROPERTIES LINK_FLAGS "-Wl,-Map=l3g4_prj.map")
