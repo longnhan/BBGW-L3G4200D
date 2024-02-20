@@ -3,22 +3,22 @@
 uint8_t i2cInit(void)
 {
     char filename[20];
-
+    uint8_t ret = 0;
     // Open the I2C bus
     sprintf(filename, "%s", i2c_Device);
     if ((i2c_File = open(filename, O_RDWR)) < 0) 
     {
         perror("Failed to open the bus.");
-        return 1;
+        ret = 1;
     }
     // Set the I2C slave address
     if (ioctl(i2c_File, I2C_SLAVE, device_Address) < 0) 
     {
         perror("Failed to acquire bus access and/or talk to slave.");
-        return 1;
+        ret = 1;
     }
     
-    return 0;
+    return ret;
 }
 void i2cClose(void)
 {
