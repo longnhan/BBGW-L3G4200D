@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <fcntl.h>
 #include "main.h"
+#include <pthread.h>
 
 /*system i2c config*/
 int i2c_File;
@@ -15,14 +16,26 @@ enum deviceOperationMode device_Mode = Device_Mode_Normal;
 
 int main(void)
 {
+    /*thread declare*/
+    pthread_t thrd_Create_File, thrd_Read_Data, thrd_Log_Data, thrd_Init;
+
+    /*variables init*/
     uint8_t buf[1]={0};
     int8_t temp=0;
     int16_t xAxis = 0;
     int16_t yAxis = 0; 
     int16_t zAxis = 0;
 
-    i2cInit();
-    setDeviceMode(device_Mode);
+    /*function declare*/
+    void *createFile(void *ptr);
+    void *systemInit(void *ptr);
+    
+    //Handle thread
+    pthread_create(&thrd_Create_File, NULL, createFile, NULL);
+    pthread_create(&thrd_Init, NULL, systemInit, NULL);
+    pthread_join(thrd_Create_File, NULL);
+    pthread_join(thrd_Init, NULL);
+
     while(1)
     {
         usleep(100000);
@@ -36,4 +49,31 @@ int main(void)
         printf("X axis: %d |Y axis: %d|Z axis: %d\n",xAxis, yAxis, zAxis);
     }
     return 0;    
+}
+
+void *createFile(void *ptr)
+{
+    FILE *fp;
+    fp = fopen("data_output.csv", "w+");
+    if(fp == NULL)
+    {
+        printf("Create file fail\n");
+    }
+    else
+    {
+        printf("Output file created\n");
+    }   
+    return NULL;
+}
+
+void *systemInit(void *ptr)
+{
+    uint8_t ret_i2c = 1;
+    while (ret_i2c == 1)
+    {
+        ret_i2c = i2cInit();
+    }
+    
+    setDeviceMode(device_Mode);
+    return NULL;
 }
