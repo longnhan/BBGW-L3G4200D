@@ -14,23 +14,28 @@ char i2c_Device[]="/dev/i2c-2";
 uint8_t device_Address = 0x69;
 enum deviceOperationMode device_Mode = Device_Mode_Normal;
 
+/*sensor raw data*/
 int16_t xAxis = 0;
 int16_t yAxis = 0; 
 int16_t zAxis = 0;
+/*sensor device name*/
+uint8_t device_name = 0;
+/*sensor temperature*/
+int8_t temp=0;
+
+/*pointer log file*/
+FILE *fp;
 
 int main(void)
 {
     /*thread declare*/
     pthread_t thrd_Create_File, thrd_Read_Data, thrd_Log_Data, thrd_Init;
 
-    /*variables init*/
-    uint8_t buf[1]={0};
-    int8_t temp=0;
-
     /*function declare*/
     void *createFile(void *ptr);
     void *systemInit(void *ptr);
     void *readSensorData(void *ptr);
+    void *logData(void *ptr);
     
     //Handle thread
     pthread_create(&thrd_Create_File, NULL, createFile, NULL);
@@ -41,19 +46,18 @@ int main(void)
     while(1)
     {
         usleep(100000);
-        readTemperature(&temp);
-        printf("device temperature: %d\n", temp);
-        readDeviceName(buf);
-        printf("device name: 0x%x\n", buf[0]);
+
         pthread_create(&thrd_Read_Data, NULL, readSensorData, NULL);
-        pthread_join(thrd_Read_Data, NULL);       
+        pthread_join(thrd_Read_Data, NULL);
+
+        pthread_create(&thrd_Log_Data, NULL, logData, NULL);
+        pthread_join(thrd_Log_Data, NULL); 
     }
     return 0;    
 }
 
 void *createFile(void *ptr)
 {
-    FILE *fp;
     fp = fopen("data_output.csv", "w+");
     if(fp == NULL)
     {
@@ -83,5 +87,25 @@ void *readSensorData(void *ptr)
     read_X_Axis(&xAxis);
     read_Y_Axis(&yAxis);
     read_Z_Axis(&zAxis);
+    readTemperature(&temp);
+    readDeviceName(&device_name);
+    
+    printf("device temperature: %d\n", temp);
+    printf("device name: 0x%x\n", device_name);
     printf("X axis: %d |Y axis: %d|Z axis: %d\n",xAxis, yAxis, zAxis);
+    return NULL;
+}
+
+void *logData(void *ptr)
+{
+    static uint8_t count  = 1;
+    if(count == 1)
+    {
+        fprintf(fp, "Read data from sensor L3G4200D\n");
+        fprintf(fp, "Device name: 0x%x\n", device_name);
+        fprintf(fp, "data x,data y,data z, temperature\n");
+        count = 0;
+    }
+    fprintf(fp, "%d,%d,%d,%d\n", xAxis, yAxis, zAxis, temp);
+    return NULL;
 }
