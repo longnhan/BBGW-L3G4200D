@@ -5,6 +5,7 @@ echo ::::----------------------------::::
 echo "Time build: $(date '+%Y-%m-%d %H:%M')"
 echo "User: $USER"
 
+mkdir -p ~/BB_Green/bt_usr/l3g4_prj/build/
 cd ~/BB_Green/bt_usr/l3g4_prj/build/
 #clean existing files
 rm -r *
