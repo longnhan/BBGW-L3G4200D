@@ -43,16 +43,11 @@ int main(void)
     pthread_join(thrd_Create_File, NULL);
     pthread_join(thrd_Init, NULL);
 
-    while(1)
-    {
-        usleep(100000);
+    pthread_create(&thrd_Read_Data, NULL, readSensorData, NULL);
+    pthread_create(&thrd_Log_Data, NULL, logData, NULL);
+    pthread_join(thrd_Read_Data, NULL);
+    pthread_join(thrd_Log_Data, NULL); 
 
-        pthread_create(&thrd_Read_Data, NULL, readSensorData, NULL);
-        pthread_join(thrd_Read_Data, NULL);
-
-        pthread_create(&thrd_Log_Data, NULL, logData, NULL);
-        pthread_join(thrd_Log_Data, NULL); 
-    }
     return 0;    
 }
 
@@ -84,28 +79,37 @@ void *systemInit(void *ptr)
 
 void *readSensorData(void *ptr)
 {
-    read_X_Axis(&xAxis);
-    read_Y_Axis(&yAxis);
-    read_Z_Axis(&zAxis);
-    readTemperature(&temp);
-    readDeviceName(&device_name);
-    
-    printf("device temperature: %d\n", temp);
-    printf("device name: 0x%x\n", device_name);
-    printf("X axis: %d |Y axis: %d|Z axis: %d\n",xAxis, yAxis, zAxis);
+    while (1)
+    {
+        read_X_Axis(&xAxis);
+        read_Y_Axis(&yAxis);
+        read_Z_Axis(&zAxis);
+        readTemperature(&temp);
+        readDeviceName(&device_name);
+        
+        printf("device temperature: %d\n", temp);
+        printf("device name: 0x%x\n", device_name);
+        printf("X axis: %d |Y axis: %d|Z axis: %d\n",xAxis, yAxis, zAxis);
+
+        usleep(100000);
+    }
     return NULL;
 }
 
 void *logData(void *ptr)
 {
     static uint8_t count  = 1;
-    if(count == 1)
+    while(1)
     {
-        fprintf(fp, "Read data from sensor L3G4200D\n");
-        fprintf(fp, "Device name: 0x%x\n", device_name);
-        fprintf(fp, "data x,data y,data z, temperature\n");
-        count = 0;
+        if(count == 1)
+        {
+            fprintf(fp, "Read data from sensor L3G4200D\n");
+            fprintf(fp, "Device name: 0x%x\n", device_name);
+            fprintf(fp, "data x,data y,data z, temperature\n");
+            count = 0;
+        }
+        fprintf(fp, "%d,%d,%d,%d\n", xAxis, yAxis, zAxis, temp);
+        usleep(100000);
     }
-    fprintf(fp, "%d,%d,%d,%d\n", xAxis, yAxis, zAxis, temp);
     return NULL;
 }
