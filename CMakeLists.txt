@@ -18,12 +18,15 @@ set(SOURCES
     user_driver/l3g4.h
     user_driver/i2c_driver.c
     user_driver/i2c_driver.h
+    user_driver/bbgw_driver/iolib.c
+    user_driver/bbgw_driver/iolib.h
 )
 
 # Include directories
 include_directories(
     src
     user_driver
+    user_driver/bbgw_driver
     user_driver/linux
     user_driver/linux/mmc
     user_driver/linux/genwqe
@@ -51,6 +54,8 @@ include_directories(
     user_driver/linux/raid
     user_driver/linux/dvb
     user_driver/linux/sched
+    # toolchain/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/arm-linux-gnueabihf/libc/usr/include/asm
+    # toolchain/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/arm-linux-gnueabihf/libc/usr/include/asm-generic
     # user_driver/linux/wimax
     # toolchain/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/lib/gcc/arm-linux-gnueabihf/6.5.0/include
 )
@@ -85,7 +90,9 @@ file(GLOB LINUX_HEADERS
     "user_driver/linux/dvb/*.h"
     "user_driver/linux/sched/*.h"
     "user_driver/linux/wimax/*.h"
-)
+    # "toolchain/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/arm-linux-gnueabihf/libc/usr/include/asm/*.h"
+    # "toolchain/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/arm-linux-gnueabihf/libc/usr/include/asm-generic/*.h"
+    )
 
 # Create the executable
 add_executable(l3g4_prj ${SOURCES} ${LINUX_HEADERS})
