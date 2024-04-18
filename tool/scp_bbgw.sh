@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "1: send build/  |  2: get *csv"
 echo "Insert number here: "
 read MY_OPTION
