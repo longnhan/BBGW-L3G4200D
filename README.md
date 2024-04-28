@@ -14,13 +14,14 @@ Clone the project repository to your development environment.
 
 **Usage**
 
-1) Build for Release:
+1) Set the project directory
 
-Run /tool/build.sh to build the project for release. This script compiles the source code and generates the release executable file.
+PRJ_PATH=~/projects/BBGW-L3G4200D #change base on path in your project
+Change here to your actual directory
 
 2) Build for Debugging:
 
-Use /tool/debug.sh to build the project for debugging purposes. This script compiles the source code with debugging symbols enabled, facilitating debugging sessions.
+Use /tool/build.sh to build for either release(1) or debug(2) purpose.
 
 3) Transfer to BeagleBone Green Wireless (BBGW):
 
