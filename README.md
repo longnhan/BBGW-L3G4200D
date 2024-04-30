@@ -14,16 +14,11 @@ Clone the project repository to your development environment.
 
 **Usage**
 
-1) Set the project directory
+1) Compile the project:
 
-PRJ_PATH=~/projects/BBGW-L3G4200D #change base on path in your project
-Change here to your actual directory
+Use /tool/build.sh to compile for either release(1) or debug(2) purpose.
 
-2) Build for Debugging:
-
-Use /tool/build.sh to build for either release(1) or debug(2) purpose.
-
-3) Transfer to BeagleBone Green Wireless (BBGW):
+2) Transfer to BeagleBone Green Wireless (BBGW):
 
 After building, copy the generated executable or files located in the build/ directory to the BeagleBone Green Wireless board.
 Use /tool/scp_bbgw.sh to securely copy the built files to the BBGW.

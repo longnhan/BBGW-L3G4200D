@@ -3,7 +3,13 @@
 echo "Time build: $(date '+%Y-%m-%d %H:%M')"
 echo "User: $USER"
 
-PRJ_PATH=~/projects/BBGW-L3G4200D #change base on path in your project
+# Get the current working directory
+CRRNT_DIR=$PWD
+
+# Remove the last directory component
+PRJ_PATH="${CRRNT_DIR%/*}"
+
+echo "$PRJ_PATH"
 
 echo "Choose build option 1: Release  |  2: Debug"
 read MY_OPTION
