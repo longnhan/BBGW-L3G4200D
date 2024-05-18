@@ -11,7 +11,7 @@ PRJ_PATH="${CRRNT_DIR%/*}"
 
 echo "$PRJ_PATH"
 
-echo "Choose build option 1: Release  |  2: Debug"
+echo "Choose build option: 1 - Release  |  2 - Debug"
 read MY_OPTION
 case $MY_OPTION in
 1)
@@ -29,18 +29,18 @@ esac
 
 mkdir -p $PRJ_PATH/build/
 cd $PRJ_PATH/build/
-#clean existing files
+# Clean existing files
 rm -r *
 
 export CC=$PRJ_PATH/toolchain/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc
 export CXX=$PRJ_PATH/toolchain/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++
 
-#perform make
-if [ $MY_OPTION==1 ]
+# Perform make
+if [ $MY_OPTION == 1 ]
 then
-        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake -DCMAKE_BUILD_TYPE=Release $PRJ_PATH
 else
-        cmake -DCMAKE_BUILD_TYPE=Debug ..
+        cmake -DCMAKE_BUILD_TYPE=Debug $PRJ_PATH
 fi
 make
 
