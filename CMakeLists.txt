@@ -23,10 +23,10 @@ add_executable(l3g4_prj_logfile src/ps_logfile.c)
 
 
 # Link libraries for 2 processes
-target_link_libraries(l3g4_prj_main pthread)
+target_link_libraries(l3g4_prj_main pthread rt)
 target_link_libraries(l3g4_prj_main src_lib user_driver_lib)
 
-target_link_libraries(l3g4_prj_logfile pthread)
+target_link_libraries(l3g4_prj_logfile pthread rt)
 target_link_libraries(l3g4_prj_logfile src_lib user_driver_lib)
 
 # Generate .map file for 2 processes
