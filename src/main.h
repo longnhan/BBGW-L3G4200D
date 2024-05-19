@@ -9,6 +9,9 @@
 #include <stdint.h>
 #include <fcntl.h>
 #include <pthread.h>
+#include <mqueue.h>
+#include <signal.h>
 
+#define MQ_NAME         "/myQueue"
 
 #endif /*__MAIN_H__*/

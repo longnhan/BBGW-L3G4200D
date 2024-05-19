@@ -20,6 +20,34 @@ int8_t temp=0;
 
 int main(void)
 {
+    /*message queue*/
+    mqd_t mq_gyro;
+
+    /*msg queue attributes*/
+    struct mq_attr mq_gyro_attr;
+    mq_gyro_attr.mq_flags = 0;
+    mq_gyro_attr.mq_maxmsg = 10;
+    mq_gyro_attr.mq_msgsize = 256;
+
+    mq_gyro = mq_open(MQ_NAME, O_CREAT | O_RDWR, 0666, &mq_gyro_attr);
+    if(mq_gyro == -1)
+    {
+        printf("msg queue create fail\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /*msg queue notification*/
+    struct sigevent mqSignal;
+    mqSignal.sigev_notify = SIGEV_SIGNAL;
+    mqSignal.sigev_signo = SIGUSR1;
+
+    if(mq_notify(mq_gyro, &mqSignal) == -1)
+    {
+        printf("msg queue notify create fail\n");
+        mq_close(mq_gyro);
+        exit(EXIT_FAILURE);
+    }
+
     /*thread declare*/
     pthread_t thrd_Read_Data, thrd_Init;
 
