@@ -6,6 +6,10 @@
 #include <stdint.h>
 #include <fcntl.h>
 #include <pthread.h>
+#include <mqueue.h>
+#include <signal.h>
+
+#define MQ_NAME         "/myQueue"
 
 /*pointer log file*/
 FILE *fp;
@@ -20,6 +24,30 @@ int8_t temp=0;
 
 int main()
 {
+    /*function declare*/
+
+    /*message queue*/
+    mqd_t mq_gyro;
+
+    mq_gyro = mq_open(MQ_NAME, O_RDONLY, 0666, NULL);
+    if(mq_gyro == -1)
+    {
+        printf("msg queue create fail\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /*msg queue notification*/
+    struct sigevent mqSignal;
+    mqSignal.sigev_notify = SIGEV_SIGNAL;
+    mqSignal.sigev_signo = SIGUSR1;
+
+    if(mq_notify(mq_gyro, &mqSignal) == -1)
+    {
+        printf("msg queue notify create fail\n");
+        mq_close(mq_gyro);
+        exit(EXIT_FAILURE);
+    }
+
     /*thread declare*/
     pthread_t thrd_Create_File, thrd_Log_Data;
 
@@ -53,6 +81,9 @@ void *createFile(void *ptr)
 
 void *logData(void *ptr)
 {
+    /*function declare*/
+    void signalHandler(void);
+    
     static uint8_t count  = 1;
     while(1)
     {
@@ -64,7 +95,14 @@ void *logData(void *ptr)
             count = 0;
         }
         fprintf(fp, "%d,%d,%d,%d\n", xAxis, yAxis, zAxis, temp);
+        /*signal catching*/
+        signal(SIGUSR1, signalHandler);
         usleep(100000);
     }
     return NULL;
+}
+
+void signalHandler(void)
+{
+    /*re-register the notification*/
 }

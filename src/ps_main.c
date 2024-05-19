@@ -36,18 +36,6 @@ int main(void)
         exit(EXIT_FAILURE);
     }
 
-    /*msg queue notification*/
-    struct sigevent mqSignal;
-    mqSignal.sigev_notify = SIGEV_SIGNAL;
-    mqSignal.sigev_signo = SIGUSR1;
-
-    if(mq_notify(mq_gyro, &mqSignal) == -1)
-    {
-        printf("msg queue notify create fail\n");
-        mq_close(mq_gyro);
-        exit(EXIT_FAILURE);
-    }
-
     /*thread declare*/
     pthread_t thrd_Read_Data, thrd_Init;
 
