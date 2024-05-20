@@ -13,5 +13,7 @@
 #include <signal.h>
 
 #define MQ_NAME         "/myQueue"
+#define MQ_QUEUE_SIZE        10
+#define MQ_MSG_SIZE         256
 
 #endif /*__MAIN_H__*/
