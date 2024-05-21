@@ -36,6 +36,7 @@ char mqSensorBuffer[MQ_MSG_SIZE]={0};
 void *createFile(void *ptr);
 void *logData(void *ptr);
 void signalHandler(int sig);
+static int bufferToData(char *ptr, int16_t *x, int16_t *y, int16_t *z, int8_t *temp);
 
 int main()
 {
@@ -145,10 +146,7 @@ void signalHandler(int sig)
         else
         {
             /*copy data from buffer to varibles*/
-            memcpy(&xAxis, mqSensorBuffer, sizeof(int16_t));
-            memcpy(&yAxis, mqSensorBuffer + 1*sizeof(int16_t), sizeof(int16_t));
-            memcpy(&zAxis, mqSensorBuffer + 2*sizeof(int16_t), sizeof(int16_t));
-            memcpy(&temp, mqSensorBuffer + 3*sizeof(int16_t), sizeof(int8_t));
+            bufferToData(mqSensorBuffer, &xAxis, &yAxis, &zAxis, &temp);
 
             /*write data to log file*/
             fprintf(fp, "%d,%d,%d,%d\n", xAxis, yAxis, zAxis, temp);
@@ -176,4 +174,21 @@ void signalHandler(int sig)
         exit(EXIT_SUCCESS);
     }
     
+}
+
+static int bufferToData(char *ptr, int16_t *x, int16_t *y, int16_t *z, int8_t *temp)
+{
+    if(ptr == NULL | x == NULL | y == NULL | z == NULL | temp == NULL)
+    {
+        fprintf(stderr, "Error: NULL pointer provided to dataToBuffer\n");
+        return -1;  // Indicate failure due to NULL pointer
+    }
+    else
+    {    
+        memcpy(x, ptr, sizeof(int16_t));
+        memcpy(y, ptr + 1*sizeof(int16_t), sizeof(int16_t));
+        memcpy(z, ptr + 2*sizeof(int16_t), sizeof(int16_t));
+        memcpy(temp, ptr + 3*sizeof(int16_t), sizeof(int8_t));
+    }
+    return 0;
 }

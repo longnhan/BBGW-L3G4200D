@@ -99,10 +99,7 @@ void *readSensorData(void *ptr)
         printf("X axis: %d |Y axis: %d|Z axis: %d\n",xAxis, yAxis, zAxis);
 
         /*copy sensor value to buffer*/
-        memcpy(mqSensorBuffer, &xAxis, sizeof(int16_t));
-        memcpy(mqSensorBuffer + 1*sizeof(int16_t), &yAxis, sizeof(int16_t));
-        memcpy(mqSensorBuffer + 2*sizeof(int16_t), &zAxis, sizeof(int16_t));
-        memcpy(mqSensorBuffer + 3*sizeof(int16_t), &temp, sizeof(int16_t));
+        dataToBuffer(mqSensorBuffer, xAxis, yAxis, zAxis, temp);
 
         /*sending buffer to queue*/
         if(mq_send(mq_gyro, mqSensorBuffer, MQ_MSG_SIZE, 0) == -1)
@@ -141,15 +138,19 @@ void signalHandler(int sig)
     }
 }
 
-int dataToBuffer(char *ptr, uint16_t data)
+static int dataToBuffer(char *ptr, int16_t x, int16_t y, int16_t z, int16_t temp)
 {
     if(ptr == NULL)
     {
-        
+        fprintf(stderr, "Error: NULL pointer provided to dataToBuffer\n");
+        return -1;  // Indicate failure due to NULL pointer
     }
     else
-    {
-
+    {    
+        memcpy(ptr, &x, sizeof(int16_t));
+        memcpy(ptr + 1*sizeof(int16_t), &y, sizeof(int16_t));
+        memcpy(ptr + 2*sizeof(int16_t), &z, sizeof(int16_t));
+        memcpy(ptr + 3*sizeof(int16_t), &temp, sizeof(int16_t));
     }
     return 0;
 }
