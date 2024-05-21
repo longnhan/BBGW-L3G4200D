@@ -1,5 +1,7 @@
 #!/bin/bash
 
+BBGW_SSH="debian@192.168.7.2"
+
 # Get the current working directory
 CRRNT_DIR=$PWD
 # Remove the last directory component
@@ -17,14 +19,14 @@ case $MY_OPTION in
     echo ::::----------------------------::::
     echo -e "\n"
     cd ..
-    scp -r $PRJ_PATH/build/ debian@192.168.7.2:~/l3g4_prj
+    scp -r $PRJ_PATH/build/ $BBGW_SSH:~/l3g4_prj
     ;;
   2)
     echo ::::----------------------------::::
     echo ::::---Get csv file from BBGW---::::
     echo ::::----------------------------::::
     echo -e "\n"
-    scp debian@192.168.7.2:~/l3g4_prj/data_output.csv $PRJ_PATH/tool
+    scp $BBGW_SSH:~/l3g4_prj/build/data_output.csv $PRJ_PATH/tool
     ;;
   *)
     # Invalid option
