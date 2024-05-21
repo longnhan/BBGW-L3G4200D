@@ -14,6 +14,10 @@
 
 #define MQ_NAME         "/myQueue"
 #define MQ_QUEUE_SIZE        10
-#define MQ_MSG_SIZE         256
+#define MQ_MSG_SIZE         1024
 
+void *systemInit(void *ptr);
+void *readSensorData(void *ptr);
+void signalHandler(int sig);
+static int dataToBuffer(char *ptr, uint16_t data);
 #endif /*__MAIN_H__*/
