@@ -5,14 +5,14 @@
         "name": "Debug GDBserver",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/build/l3g4_prj",
+        "program": "${workspaceFolder}/build/l3g4_prj_main",
         "args": [],
         "stopAtEntry": false,
-        "cwd": "/home/nhan/BB_Green/bt_usr/l3g4_prj/build/",
+        "cwd": "${workspaceFolder}/build/",
         "environment": [],
         "externalConsole": false,
         "MIMode": "gdb",
-        "miDebuggerPath": "/home/nhan/Phu_Vina_linux/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gdb",
+        "miDebuggerPath": "${workspaceFolder}/toolchain/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gdb",
         "miDebuggerServerAddress": "192.168.7.2:6060"
       }
     ]
