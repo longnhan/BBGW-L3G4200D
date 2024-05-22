@@ -22,4 +22,5 @@ void *logProcessCall(void *ptr);
 void signalHandler(int sig);
 static int dataToBuffer(char *ptr, int16_t x, int16_t y, int16_t z, int16_t temp);
 static void waitToStart(void);
+
 #endif /*__MAIN_H__*/

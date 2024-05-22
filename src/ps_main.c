@@ -22,11 +22,13 @@ uint8_t device_name = 0;
 /*sensor temperature*/
 int8_t temp=0;
 /*data sensor to send queue*/
-char mqSensorBuffer[MQ_MSG_SIZE]={0};
-char str_test[MQ_MSG_SIZE] = {"Hella"};
+char mqSensorBuffer[MQ_MSG_SIZE]={};
+char str_test[MQ_MSG_SIZE] = {};
 
 int main(void)
 {
+    waitToStart();
+    
     printf("start opening msg queue\n");
     /*msg queue attributes*/
     mq_gyro_attr.mq_flags = 0;
@@ -50,14 +52,21 @@ int main(void)
     /*signal catching*/
     signal(SIGINT, signalHandler);
 
+    usleep(100000);
+
     /*thread declare*/
-    pthread_t thrd_Read_Data, thrd_Init;
+    pthread_t thrd_Read_Data, thrd_Init, thrd_Call_App;
     
     /*Handle thread*/
     pthread_create(&thrd_Init, NULL, systemInit, NULL);
     pthread_join(thrd_Init, NULL);
 
+    pthread_create(&thrd_Call_App, NULL, logProcessCall, NULL);
+    
+    usleep(100000);
+    
     pthread_create(&thrd_Read_Data, NULL, readSensorData, NULL);
+    pthread_join(thrd_Call_App, NULL);
     pthread_join(thrd_Read_Data, NULL);
     
     /* Close the message queue */
@@ -81,8 +90,6 @@ void *systemInit(void *ptr)
 
 void *readSensorData(void *ptr)
 {
-    printf("Type anything to start: "); //test
-    scanf("%s", str_test); //test
     while (1)
     {
         /*get data from sensor*/
@@ -123,6 +130,26 @@ void *readSensorData(void *ptr)
     return NULL;
 }
 
+void *logProcessCall(void *ptr)
+{
+    pid_t pid = fork();
+    if (pid == 0) 
+    {
+        // Child process
+        execlp("./l3g4_prj_logfile", "./l3g4_prj_logfile", NULL);
+        perror("execlp");
+        exit(EXIT_FAILURE);
+    } 
+    else if (pid < 0) 
+    {
+        // Fork failed
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+    // Parent process continues
+    return NULL;
+}
+
 void signalHandler(int sig)
 {
     if(sig == SIGINT)
@@ -153,4 +180,10 @@ static int dataToBuffer(char *ptr, int16_t x, int16_t y, int16_t z, int16_t temp
         memcpy(ptr + 3*sizeof(int16_t), &temp, sizeof(int16_t));
     }
     return 0;
+}
+
+static void waitToStart(void)
+{
+    printf("Type anything to start: "); //test
+    scanf("%s", str_test); //test
 }

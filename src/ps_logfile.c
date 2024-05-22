@@ -32,7 +32,7 @@ int main()
     mq_gyro = mq_open(MQ_NAME, O_RDONLY, 0644, &mq_gyro_attr);
     if(mq_gyro == -1)
     {
-        printf("msg queue create fail\n");
+        printf("msg queue open fail\n");
         perror("mq_open");
         exit(EXIT_FAILURE);
     }
