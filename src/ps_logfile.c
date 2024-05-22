@@ -1,16 +1,4 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <pthread.h>
-#include <mqueue.h>
-#include <signal.h>
-
-#define MQ_NAME         "/myQueue"
-#define MQ_QUEUE_SIZE        10
-#define MQ_MSG_SIZE         1024
+#include "logfile.h"
 
 /*message queue*/
 mqd_t mq_gyro;
@@ -31,12 +19,6 @@ uint8_t device_name = 0;
 int8_t temp=0;
 /*data sensor to send queue*/
 char mqSensorBuffer[MQ_MSG_SIZE]={0};
-
-/*Function declaration*/
-void *createFile(void *ptr);
-void *logData(void *ptr);
-void signalHandler(int sig);
-static int bufferToData(char *ptr, int16_t *x, int16_t *y, int16_t *z, int8_t *temp);
 
 int main()
 {
@@ -98,7 +80,7 @@ int main()
 
 void *createFile(void *ptr)
 {
-    fp = fopen("data_output.csv", "w+");
+    fp = fopen(LOGFILE_NAME, "w+");
     if(fp == NULL)
     {
         printf("Create file fail\n");

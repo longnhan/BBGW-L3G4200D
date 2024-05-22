@@ -3,6 +3,7 @@ set(SRC_FILES
     ps_main.c	# first process
     ps_logfile.c  # second process
     main.h
+    logfile.h
 )
 
 # Create a library from these files
