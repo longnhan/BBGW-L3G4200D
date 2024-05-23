@@ -23,7 +23,6 @@ uint8_t device_name = 0;
 int8_t temp=0;
 /*data sensor to send queue*/
 char mqSensorBuffer[MQ_MSG_SIZE]={};
-char str_test[MQ_MSG_SIZE] = {};
 
 int main(void)
 {
@@ -93,11 +92,7 @@ void *readSensorData(void *ptr)
     while (1)
     {
         /*get data from sensor*/
-        read_X_Axis(&xAxis);
-        read_Y_Axis(&yAxis);
-        read_Z_Axis(&zAxis);
-        readTemperature(&temp);
-        readDeviceName(&device_name);
+        getSensorData(&xAxis, &yAxis, &zAxis, &temp, &device_name);
         
         /*keep cursor always on top-left*/
         printf("\033[H\033[J");
@@ -150,7 +145,7 @@ void *logProcessCall(void *ptr)
         perror("fork");
         exit(EXIT_FAILURE);
     }
-    // Parent process continues
+
     return NULL;
 }
 
@@ -186,8 +181,27 @@ static int dataToBuffer(char *ptr, int16_t x, int16_t y, int16_t z, int16_t temp
     return 0;
 }
 
+static int getSensorData(int16_t *x, int16_t *y, int16_t *z, int8_t *temp, uint8_t *name)
+{
+    if(x == NULL | y == NULL | z == NULL | temp == NULL | name ==  NULL)
+    {
+        fprintf(stderr, "Error: NULL pointer provided to dataToBuffer\n");
+        return -1;  // Indicate failure due to NULL pointer
+    }
+    else
+    {
+        read_X_Axis(x);
+        read_Y_Axis(y);
+        read_Z_Axis(z);
+        readTemperature(temp);
+        readDeviceName(name);
+    }
+    return 0;
+}
+
 static void waitToStart(void)
 {
+    char str_test[MQ_MSG_SIZE] = {};
     printf("Type anything to start: "); //test
     scanf("%s", str_test); //test
 }

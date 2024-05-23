@@ -135,7 +135,7 @@ void signalHandler(int sig)
             
             printf("receive buffer DONE\n");
             
-            /*setup message queue notification*/
+            /*re-register message queue notification*/
             mqSignal.sigev_notify = SIGEV_SIGNAL;
             mqSignal.sigev_signo = SIGUSR1;
 
