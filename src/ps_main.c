@@ -62,9 +62,15 @@ int main(void)
 
     pthread_create(&thrd_Call_App, NULL, logProcessCall, NULL);
     
-    usleep(100000);
-    
+    /*wait for the other process available before sending message*/
+    while((fopen(LOGFILE_NAME, "r") == NULL))
+    {
+        usleep(10000);
+        printf("waiting for logfile creation\n");
+    }
+
     pthread_create(&thrd_Read_Data, NULL, readSensorData, NULL);
+    
     pthread_join(thrd_Call_App, NULL);
     pthread_join(thrd_Read_Data, NULL);
     
@@ -84,6 +90,9 @@ void *systemInit(void *ptr)
     }
     
     setDeviceMode(device_Mode);
+    
+    /*remove previous logfile*/
+    remove(LOGFILE_NAME);
     return NULL;
 }
 

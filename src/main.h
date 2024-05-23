@@ -12,6 +12,7 @@
 #include <mqueue.h>
 #include <signal.h>
 
+#define LOGFILE_NAME    "data_output.csv"
 #define MQ_NAME         "/myQueue"
 #define MQ_QUEUE_SIZE        10
 #define MQ_MSG_SIZE         1024
