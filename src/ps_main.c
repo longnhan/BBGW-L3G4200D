@@ -99,6 +99,10 @@ void *readSensorData(void *ptr)
         readTemperature(&temp);
         readDeviceName(&device_name);
         
+        /*keep cursor always on top-left*/
+        printf("\033[H\033[J");
+        fflush(stdout);
+
         /*print out the sensor's data*/
         printf("\n|-----------------------------------------------------|\n");
         printf("device temperature: %d\n", temp);
@@ -122,7 +126,7 @@ void *readSensorData(void *ptr)
             printf("current messgae in queue: %d\n", mq_gyro_attr.mq_curmsgs);
         }
 
-        usleep(100000);
+        usleep(150000);
     }
     mq_close(mq_gyro);
     mq_unlink(MQ_NAME);
