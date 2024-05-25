@@ -31,7 +31,7 @@ int main(void)
 {
     waitToStart();
 
-    semaphore_Init(SEM_MQ_NAME, &sem_Msg_Queue);  // Pass the address of the semaphore pointer
+    semaphore_Init(SEM_MQ_NAME, &sem_Msg_Queue);
 
     printf("start opening msg queue\n");
     /*msg queue attributes*/

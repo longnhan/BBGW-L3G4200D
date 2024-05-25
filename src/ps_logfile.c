@@ -101,6 +101,7 @@ void *logData(void *ptr)
         if(count == 1)
         {
             fprintf(fp, "Log file read data from sensor L3G4200D\n");
+            printDateTime(fp);
             fprintf(fp, "Device name: 0x%x\n", device_name);
             fprintf(fp, "data x,data y,data z, temperature\n");
             count = 0;
@@ -173,4 +174,12 @@ static int bufferToData(char *ptr, int16_t *x, int16_t *y, int16_t *z, int8_t *t
         memcpy(temp, ptr + 3*sizeof(int16_t), sizeof(int8_t));
     }
     return 0;
+}
+
+static void printDateTime(FILE *fp)
+{
+    time_t now = time(NULL);
+    char time_str[100];
+    strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", localtime(&now));
+    fprintf(fp, "Date and Time: %s\n", time_str);
 }
