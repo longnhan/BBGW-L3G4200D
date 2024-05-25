@@ -11,16 +11,23 @@
 #include <pthread.h>
 #include <mqueue.h>
 #include <signal.h>
+#include <semaphore.h>
 
-#define LOGFILE_NAME    "data_output.csv"
-#define MQ_NAME         "/myQueue"
-#define MQ_QUEUE_SIZE        10
+#define LOGFILE_NAME        "data_output.csv"
+#define MQ_NAME             "/myQueue"
+#define SEM_MQ_NAME         "/semaphore_Msg_Queue"
+#define SEM_NUMBER          1
+#define MQ_QUEUE_SIZE       10
 #define MQ_MSG_SIZE         1024
 
 void *systemInit(void *ptr);
 void *readSensorData(void *ptr);
 void *logProcessCall(void *ptr);
 void signalHandler(int sig);
+
+static int semaphore_Init(char *sem_Name, sem_t **sem_d);
+static void semaphore_Close(const char *sem_Name, sem_t *sem_d);
+
 static int dataToBuffer(char *ptr, int16_t x, int16_t y, int16_t z, int16_t temp);
 static int getSensorData(int16_t *x, int16_t *y, int16_t *z, int8_t *temp, uint8_t *name);
 static void waitToStart(void);

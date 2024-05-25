@@ -13,6 +13,9 @@ mqd_t mq_gyro;
 /*msg queue attributes*/
 struct mq_attr mq_gyro_attr;
 
+/*semaphore*/
+sem_t *sem_Msg_Queue;
+
 /*sensor raw data*/
 int16_t xAxis = 0;
 int16_t yAxis = 0; 
@@ -27,7 +30,9 @@ char mqSensorBuffer[MQ_MSG_SIZE]={};
 int main(void)
 {
     waitToStart();
-    
+
+    semaphore_Init(SEM_MQ_NAME, &sem_Msg_Queue);  // Pass the address of the semaphore pointer
+
     printf("start opening msg queue\n");
     /*msg queue attributes*/
     mq_gyro_attr.mq_flags = 0;
@@ -116,6 +121,7 @@ void *readSensorData(void *ptr)
         /*copy sensor value to buffer*/
         dataToBuffer(mqSensorBuffer, xAxis, yAxis, zAxis, temp);
 
+        sem_trywait(sem_Msg_Queue);
         /*sending buffer to queue*/
         if(mq_send(mq_gyro, mqSensorBuffer, MQ_MSG_SIZE, 0) == -1)
         {
@@ -129,11 +135,10 @@ void *readSensorData(void *ptr)
             mq_getattr(mq_gyro, &mq_gyro_attr);
             printf("current messgae in queue: %d\n", mq_gyro_attr.mq_curmsgs);
         }
+        sem_post(sem_Msg_Queue);
 
         usleep(150000);
     }
-    mq_close(mq_gyro);
-    mq_unlink(MQ_NAME);
 
     return NULL;
 }
@@ -165,6 +170,7 @@ void signalHandler(int sig)
         printf("\nCaught SIGINT, cleaning up...\n");
         mq_close(mq_gyro);
         mq_unlink(MQ_NAME);
+        semaphore_Close(SEM_MQ_NAME, sem_Msg_Queue);
         exit(EXIT_SUCCESS);
     }
     else
@@ -213,4 +219,21 @@ static void waitToStart(void)
     char str_test[MQ_MSG_SIZE] = {};
     printf("Type anything to start: "); //test
     scanf("%s", str_test); //test
+}
+
+static int semaphore_Init(char *sem_Name, sem_t **sem_d)
+{
+    *sem_d = sem_open(sem_Name, O_CREAT | O_EXCL, 0644, SEM_NUMBER);
+    if(*sem_d == SEM_FAILED)
+    {
+        perror("sem_open");
+        exit(EXIT_FAILURE);
+    }
+    return 0;
+}
+
+static void semaphore_Close(const char *sem_Name, sem_t *sem_d)
+{
+    sem_close(sem_d);
+    sem_unlink(SEM_MQ_NAME);
 }
