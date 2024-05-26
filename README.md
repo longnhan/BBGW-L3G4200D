@@ -45,7 +45,6 @@ Compilation will create 2 executed files (l3g4_prj_main and l3g4_prj_logfile). L
 **Setup daemon for auto start from power up**
 touch  /etc/systemd/system/autostart.service
 
-**content**
     [Unit]
     Description=My Auto start Program
 
@@ -58,11 +57,12 @@ touch  /etc/systemd/system/autostart.service
 
     [Install]
     WantedBy=multi-user.target
-**end of content**
 
-sudo  systemctl daemon-reload
-sudo  systemctl enable nhan_autostart.service
-sudo  systemctl start nhan_autostart.service
+Then run:
+
+    sudo  systemctl daemon-reload
+    sudo  systemctl enable nhan_autostart.service
+    sudo  systemctl start nhan_autostart.service
 
 
 **License**
