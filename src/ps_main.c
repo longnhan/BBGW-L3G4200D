@@ -29,9 +29,17 @@ char mqSensorBuffer[MQ_MSG_SIZE]={};
 
 int main(void)
 {
+
+#ifndef AUTO_START_PROCESS
     waitToStart();
+#else
+    sleep(10);
+#endif
 
     semaphore_Init(SEM_MQ_NAME, &sem_Msg_Queue);
+    /* Close the message queue */
+    mq_close(mq_gyro);
+    mq_unlink(MQ_NAME);
 
     printf("start opening msg queue\n");
     /*msg queue attributes*/
@@ -149,7 +157,7 @@ void *logProcessCall(void *ptr)
     if (pid == 0) 
     {
         // Child process
-        execlp("./l3g4_prj_logfile", "./l3g4_prj_logfile", NULL);
+        execlp(L3G4_PRJ_LOGFILE, L3G4_PRJ_LOGFILE, NULL);
         perror("execlp");
         exit(EXIT_FAILURE);
     } 
@@ -223,6 +231,7 @@ static void waitToStart(void)
 
 static int semaphore_Init(char *sem_Name, sem_t **sem_d)
 {
+    semaphore_Close(sem_Name, sem_d);
     *sem_d = sem_open(sem_Name, O_CREAT | O_EXCL, 0644, SEM_NUMBER);
     if(*sem_d == SEM_FAILED)
     {

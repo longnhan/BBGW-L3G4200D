@@ -16,7 +16,7 @@
 #define MQ_QUEUE_SIZE        10
 #define MQ_MSG_SIZE         1024
 
-#define LOGFILE_NAME    "data_output.csv"
+#define LOGFILE_NAME    "/home/debian/l3g4_prj/build/data_output.csv"
 
 /*Function declaration*/
 void *createFile(void *ptr);

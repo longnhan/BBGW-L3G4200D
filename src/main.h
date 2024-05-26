@@ -13,12 +13,15 @@
 #include <signal.h>
 #include <semaphore.h>
 
-#define LOGFILE_NAME        "data_output.csv"
+#define LOGFILE_NAME        "/home/debian/l3g4_prj/build/data_output.csv"
 #define MQ_NAME             "/myQueue"
 #define SEM_MQ_NAME         "/semaphore_Msg_Queue"
+#define L3G4_PRJ_LOGFILE    "/home/debian/l3g4_prj/build/l3g4_prj_logfile"
 #define SEM_NUMBER          1
 #define MQ_QUEUE_SIZE       10
 #define MQ_MSG_SIZE         1024
+
+#define AUTO_START_PROCESS
 
 void *systemInit(void *ptr);
 void *readSensorData(void *ptr);
