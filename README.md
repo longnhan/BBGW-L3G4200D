@@ -1,6 +1,6 @@
-**Embedded Linux Project with BeagleBone Green Wireless**
+## Embedded Linux Project with BeagleBone Green Wireless
 
-**Introduction**
+### Introduction
 
 This project is an embedded Linux application tailored for the BeagleBone Green Wireless platform. 
 
@@ -8,21 +8,24 @@ It facilitates seamless communication with an L3G4200 gyroscope sensor via the I
 
 Developed entirely from scratch, this project provides a robust foundation for interfacing with sensors and collecting data in embedded systems.
 
-**Setup**
+### Setup
 
 To set up the project, follow these steps:
 
-Connect the L3G4200 gyroscope sensor as shown in diagram.png
+Connect the L3G4200 gyroscope sensor as shown ![image](https://github.com/longnhan/BBGW-L3G4200D/assets/87537318/648163e7-491c-4d44-9570-eb02f9d98a7a)
+
 
 Ensure that the necessary I2C drivers are enabled on the BeagleBone Green Wireless board.
 
-Clone the project repository to your development environment, refer the flow.png for SW's understanding
+Clone the project repository to your development environment, refer the flow.png for SW's understanding![image](https://github.com/longnhan/BBGW-L3G4200D/assets/87537318/f1a9deba-ad4c-49f7-8af4-5fdef5f595ae)
 
-**Usage**
+
+### Usage
 
 1) Compile the project:
 
-Use /tool/build.sh to compile for either release(1) or debug(2) purpose.
+cd tool/
+run ./build.sh to compile for either release(1) or debug(2) purpose.
 
 2) Transfer to BeagleBone Green Wireless (BBGW):
 
@@ -34,7 +37,7 @@ Run the Application:
 
 Once the files are transferred, execute the application on the BeagleBone Green Wireless board according to your requirements.
 
-**Additional Information**
+### Additional Information
 
 For any additional information or troubleshooting, refer to the project documentation.
 
@@ -42,7 +45,7 @@ If you encounter any issues or have questions, feel free to reach out to the pro
 
 Compilation will create 2 executed files (l3g4_prj_main and l3g4_prj_logfile). Lets run the l3g4_prj_main, the l3g4_prj_logfile will be call by the main.
 
-**Setup daemon for auto start from power up**
+### Setup daemon for auto start from power-up
 touch  /etc/systemd/system/autostart.service
 
     [Unit]
@@ -65,7 +68,7 @@ Then run:
     sudo  systemctl start nhan_autostart.service
 
 
-**License**
+### License
 
 This project is licensed under the MIT License.
 

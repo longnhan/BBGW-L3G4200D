@@ -30,5 +30,5 @@ target_link_libraries(l3g4_prj_logfile pthread rt)
 target_link_libraries(l3g4_prj_logfile src_lib user_driver_lib)
 
 # Generate .map file for 2 processes
-set_target_properties(l3g4_prj_main PROPERTIES LINK_FLAGS "-Wl,-Map=l3g4_prj.map")
-set_target_properties(l3g4_prj_logfile PROPERTIES LINK_FLAGS "-Wl,-Map=l3g4_prj.map")
+set_target_properties(l3g4_prj_main PROPERTIES LINK_FLAGS "-Wl,-Map=l3g4_prj_main.map")
+set_target_properties(l3g4_prj_logfile PROPERTIES LINK_FLAGS "-Wl,-Map=l3g4_prj_logfile.map")

@@ -158,8 +158,6 @@ void *logProcessCall(void *ptr)
     {
         // Child process
         execlp(L3G4_PRJ_LOGFILE, L3G4_PRJ_LOGFILE, NULL);
-        perror("execlp");
-        exit(EXIT_FAILURE);
     } 
     else if (pid < 0) 
     {
