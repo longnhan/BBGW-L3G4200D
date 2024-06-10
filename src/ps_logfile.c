@@ -22,6 +22,8 @@ char mqSensorBuffer[MQ_MSG_SIZE]={0};
 
 int main()
 {
+    processSetup();
+
     /*msg queue attributes*/
     mq_gyro_attr.mq_flags = 0;
     mq_gyro_attr.mq_maxmsg = MQ_QUEUE_SIZE;
@@ -182,4 +184,27 @@ static void printDateTime(FILE *fp)
     char time_str[100];
     strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", localtime(&now));
     fprintf(fp, "Date and Time: %s\n", time_str);
+}
+
+static void curWorkingPath(char *fname)
+{
+    char cwp[PATH_MAX] = {0};
+    if(getcwd(cwp, sizeof(cwp)) != NULL)
+    {
+        printf("working path is: %s\n", cwp);
+        strcat(cwp, fname);
+        strcpy(fname, cwp);
+        printf("File full path: %s\n", fname);
+    }
+    else
+    {
+        perror("getcwd() error");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void processSetup(void)
+{
+    /*get working path*/
+    curWorkingPath(LOGFILE_NAME);
 }
