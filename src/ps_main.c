@@ -37,9 +37,6 @@ int main(void)
 #endif
 
     semaphore_Init(SEM_MQ_NAME, &sem_Msg_Queue);
-    /* Close the message queue */
-    mq_close(mq_gyro);
-    mq_unlink(MQ_NAME);
 
     printf("start opening msg queue\n");
     /*msg queue attributes*/
@@ -88,8 +85,7 @@ int main(void)
     pthread_join(thrd_Read_Data, NULL);
     
     /* Close the message queue */
-    mq_close(mq_gyro);
-    mq_unlink(MQ_NAME);
+    messageQueue_Close(MQ_NAME, mq_gyro);
 
     return 0;    
 }
@@ -245,7 +241,13 @@ static int semaphore_Init(char *sem_Name, sem_t **sem_d)
 static void semaphore_Close(const char *sem_Name, sem_t *sem_d)
 {
     sem_close(sem_d);
-    sem_unlink(SEM_MQ_NAME);
+    sem_unlink(sem_Name);
+}
+
+static void messageQueue_Close(const char *mq_Name, mqd_t *mq_d)
+{
+    mq_close(mq_d);
+    mq_unlink(mq_Name);
 }
 
 static void curWorkingPath(char *fname)
