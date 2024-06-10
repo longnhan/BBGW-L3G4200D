@@ -24,6 +24,7 @@ void processSetup(void);
 void *createFile(void *ptr);
 void *logData(void *ptr);
 void signalHandler(int sig);
+
 static int bufferToData(char *ptr, int16_t *x, int16_t *y, int16_t *z, int8_t *temp);
 static void printDateTime(FILE *file);
 static void curWorkingPath(char *fileNamePath);

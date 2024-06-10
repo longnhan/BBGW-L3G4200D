@@ -103,6 +103,9 @@ void *systemInit(void *ptr)
     }
     
     setDeviceMode(device_Mode);
+
+    curWorkingPath(LOGFILE_NAME);
+    curWorkingPath(L3G4_PRJ_LOGFILE);
     
     /*remove previous logfile*/
     remove(LOGFILE_NAME);
@@ -243,4 +246,21 @@ static void semaphore_Close(const char *sem_Name, sem_t *sem_d)
 {
     sem_close(sem_d);
     sem_unlink(SEM_MQ_NAME);
+}
+
+static void curWorkingPath(char *fname)
+{
+    char cwp[PATH_MAX] = {0};
+    if(getcwd(cwp, sizeof(cwp)) != NULL)
+    {
+        printf("working path is: %s\n", cwp);
+        strcat(cwp, fname);
+        strcpy(fname, cwp);
+        printf("File full path: %s\n", fname);
+    }
+    else
+    {
+        perror("getcwd() error");
+        exit(EXIT_FAILURE);
+    }
 }
