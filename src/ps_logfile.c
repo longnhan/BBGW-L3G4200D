@@ -1,5 +1,8 @@
 #include "logfile.h"
 
+/*Global path variables*/
+char LOGFILE_NAME[PATH_MAX] = "/data_output.csv";
+
 /*message queue*/
 mqd_t mq_gyro;
 /*message queue notification*/
@@ -24,40 +27,42 @@ int main()
 {
     processSetup();
 
+    messageQueueInit(&mq_gyro, &mq_gyro_attr);
     /*msg queue attributes*/
-    mq_gyro_attr.mq_flags = 0;
-    mq_gyro_attr.mq_maxmsg = MQ_QUEUE_SIZE;
-    mq_gyro_attr.mq_msgsize = MQ_MSG_SIZE;
-    mq_gyro_attr.mq_curmsgs = 0;
+    // mq_gyro_attr.mq_flags = 0;
+    // mq_gyro_attr.mq_maxmsg = MQ_QUEUE_SIZE;
+    // mq_gyro_attr.mq_msgsize = MQ_MSG_SIZE;
+    // mq_gyro_attr.mq_curmsgs = 0;
 
-    /*message queue creating*/
-    mq_gyro = mq_open(MQ_NAME, O_RDONLY, 0644, &mq_gyro_attr);
-    if(mq_gyro == -1)
-    {
-        printf("msg queue open fail\n");
-        perror("mq_open");
-        exit(EXIT_FAILURE);
-    }
-    else
-    {
-        printf("queue opened successfully\n");
-    }
+    // /*message queue creating*/
+    // mq_gyro = mq_open(MQ_NAME, O_RDONLY, 0644, &mq_gyro_attr);
+    // if(mq_gyro == -1)
+    // {
+    //     printf("msg queue open fail\n");
+    //     perror("mq_open");
+    //     exit(EXIT_FAILURE);
+    // }
+    // else
+    // {
+    //     printf("queue opened successfully\n");
+    // }
 
     /*setup message queue notification*/
-    mqSignal.sigev_notify = SIGEV_SIGNAL;
-    mqSignal.sigev_signo = SIGUSR1;
+    messageQueueRegisterNotify(&mq_gyro, &mqSignal);
+    // mqSignal.sigev_notify = SIGEV_SIGNAL;
+    // mqSignal.sigev_signo = SIGUSR1;
 
-    if(mq_notify(mq_gyro, &mqSignal) == -1)
-    {
-        printf("msg queue notify SIGUSR1 create fail\n");
-        perror("mq_notify");
-        mq_close(mq_gyro);
-        exit(EXIT_FAILURE);
-    }
-    else
-    {
-        printf("queue notify registered successfully\n");
-    }
+    // if(mq_notify(mq_gyro, &mqSignal) == -1)
+    // {
+    //     printf("msg queue notify SIGUSR1 create fail\n");
+    //     perror("mq_notify");
+    //     mq_close(mq_gyro);
+    //     exit(EXIT_FAILURE);
+    // }
+    // else
+    // {
+    //     printf("queue notify registered successfully\n");
+    // }
 
     /*register signal catching*/
     signal(SIGUSR1, signalHandler);
@@ -139,15 +144,16 @@ void signalHandler(int sig)
             printf("receive buffer DONE\n");
             
             /*re-register message queue notification*/
-            mqSignal.sigev_notify = SIGEV_SIGNAL;
-            mqSignal.sigev_signo = SIGUSR1;
+            messageQueueRegisterNotify(&mq_gyro, &mqSignal);
+            // mqSignal.sigev_notify = SIGEV_SIGNAL;
+            // mqSignal.sigev_signo = SIGUSR1;
 
-            if(mq_notify(mq_gyro, &mqSignal) == -1)
-            {
-                printf("msg queue notify SIGUSR1 create fail\n");
-                mq_close(mq_gyro);
-                exit(EXIT_FAILURE);
-            }
+            // if(mq_notify(mq_gyro, &mqSignal) == -1)
+            // {
+            //     printf("msg queue notify SIGUSR1 create fail\n");
+            //     mq_close(mq_gyro);
+            //     exit(EXIT_FAILURE);
+            // }
         }
     }
     else if(sig == SIGINT)
@@ -207,4 +213,43 @@ void processSetup(void)
 {
     /*get working path*/
     curWorkingPath(LOGFILE_NAME);
+}
+
+void messageQueueInit(mqd_t *mqd_ptr, struct mq_attr *attr_ptr)
+{
+    attr_ptr->mq_flags = 0;
+    attr_ptr->mq_maxmsg = MQ_QUEUE_SIZE;
+    attr_ptr->mq_msgsize = MQ_MSG_SIZE;
+    attr_ptr->mq_curmsgs = 0;
+
+    /*message queue creating*/
+    *mqd_ptr = mq_open(MQ_NAME, O_RDONLY, 0644, attr_ptr);
+    if(*mqd_ptr == -1)
+    {
+        printf("msg queue open fail\n");
+        perror("mq_open");
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        printf("queue opened successfully\n");
+    }
+}
+
+void messageQueueRegisterNotify(mqd_t *mqd_ptr, struct sigevent *sig_ptr)
+{
+    sig_ptr->sigev_notify = SIGEV_SIGNAL;
+    sig_ptr->sigev_signo = SIGUSR1;
+
+    if(mq_notify(mqd_ptr, sig_ptr) == -1)
+    {
+        printf("msg queue notify SIGUSR1 create fail\n");
+        perror("mq_notify");
+        mq_close(mq_gyro);
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        printf("queue notify registered successfully\n");
+    }
 }

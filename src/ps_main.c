@@ -2,6 +2,10 @@
 #include "l3g4.h"
 #include "i2c_driver.h"
 
+/*Global path variables*/
+char LOGFILE_NAME[PATH_MAX] = "/data_output.csv";
+char L3G4_PRJ_LOGFILE[PATH_MAX] = "/l3g4_prj_logfile";
+
 /*system i2c config*/
 int i2c_File;
 char i2c_Device[]="/dev/i2c-2";

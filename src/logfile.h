@@ -17,13 +17,15 @@
 #define MQ_QUEUE_SIZE        10
 #define MQ_MSG_SIZE         1024
 
-char LOGFILE_NAME[PATH_MAX] = "/data_output.csv";
 
 /*Function declaration*/
 void processSetup(void);
 void *createFile(void *ptr);
 void *logData(void *ptr);
 void signalHandler(int sig);
+
+void messageQueueInit(mqd_t *mqd_ptr, struct mq_attr *attr_ptr);
+void messageQueueRegisterNotify(mqd_t *mqd_ptr, struct sigevent *sig_ptr);
 
 static int bufferToData(char *ptr, int16_t *x, int16_t *y, int16_t *z, int8_t *temp);
 static void printDateTime(FILE *file);

@@ -22,9 +22,6 @@
 
 #define AUTO_START_PROCESS
 
-char LOGFILE_NAME[PATH_MAX] = "/data_output.csv";
-char L3G4_PRJ_LOGFILE[PATH_MAX] = "/l3g4_prj_logfile";
-
 void *systemInit(void *ptr);
 void *readSensorData(void *ptr);
 void *logProcessCall(void *ptr);
