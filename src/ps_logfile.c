@@ -27,7 +27,7 @@ int main()
 {
     processSetup();
 
-    messageQueueInit(&mq_gyro, &mq_gyro_attr);
+    messageQueue_Init(&mq_gyro, &mq_gyro_attr);
     /*msg queue attributes*/
     // mq_gyro_attr.mq_flags = 0;
     // mq_gyro_attr.mq_maxmsg = MQ_QUEUE_SIZE;
@@ -48,7 +48,7 @@ int main()
     // }
 
     /*setup message queue notification*/
-    messageQueueRegisterNotify(&mq_gyro, &mqSignal);
+    messageQueue_Register_Notify(mq_gyro, &mqSignal);
     // mqSignal.sigev_notify = SIGEV_SIGNAL;
     // mqSignal.sigev_signo = SIGUSR1;
 
@@ -144,7 +144,7 @@ void signalHandler(int sig)
             printf("receive buffer DONE\n");
             
             /*re-register message queue notification*/
-            messageQueueRegisterNotify(&mq_gyro, &mqSignal);
+            messageQueue_Register_Notify(mq_gyro, &mqSignal);
             // mqSignal.sigev_notify = SIGEV_SIGNAL;
             // mqSignal.sigev_signo = SIGUSR1;
 
@@ -215,7 +215,7 @@ void processSetup(void)
     curWorkingPath(LOGFILE_NAME);
 }
 
-void messageQueueInit(mqd_t *mqd_ptr, struct mq_attr *attr_ptr)
+void messageQueue_Init(mqd_t *mqd_ptr, struct mq_attr *attr_ptr)
 {
     attr_ptr->mq_flags = 0;
     attr_ptr->mq_maxmsg = MQ_QUEUE_SIZE;
@@ -236,12 +236,12 @@ void messageQueueInit(mqd_t *mqd_ptr, struct mq_attr *attr_ptr)
     }
 }
 
-void messageQueueRegisterNotify(mqd_t *mqd_ptr, struct sigevent *sig_ptr)
+void messageQueue_Register_Notify(mqd_t mqd, struct sigevent *sig_ptr)
 {
     sig_ptr->sigev_notify = SIGEV_SIGNAL;
     sig_ptr->sigev_signo = SIGUSR1;
 
-    if(mq_notify(mqd_ptr, sig_ptr) == -1)
+    if(mq_notify(mqd, sig_ptr) == -1)
     {
         printf("msg queue notify SIGUSR1 create fail\n");
         perror("mq_notify");

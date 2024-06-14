@@ -248,7 +248,12 @@ static void semaphore_Close(const char *sem_Name, sem_t *sem_d)
     sem_unlink(sem_Name);
 }
 
-static void messageQueue_Close(const char *mq_Name, mqd_t *mq_d)
+void messageQueue_Init(mqd_t *mqd_ptr, struct mq_attr *attr_ptr)
+{
+
+}
+
+static void messageQueue_Close(const char *mq_Name, mqd_t mq_d)
 {
     mq_close(mq_d);
     mq_unlink(mq_Name);
