@@ -43,24 +43,8 @@ int main(void)
     semaphore_Init(SEM_MQ_NAME, &sem_Msg_Queue);
 
     printf("start opening msg queue\n");
-    /*msg queue attributes*/
-    mq_gyro_attr.mq_flags = 0;
-    mq_gyro_attr.mq_maxmsg = MQ_QUEUE_SIZE;
-    mq_gyro_attr.mq_msgsize = MQ_MSG_SIZE;
-    mq_gyro_attr.mq_curmsgs = 0;
-    
-    /*open message queue*/
-    mq_gyro = mq_open(MQ_NAME, O_CREAT | O_WRONLY, 0644, &mq_gyro_attr);
-    if(mq_gyro == -1)
-    {
-        printf("msg queue create fail\n");
-        perror("mq_open");
-        exit(EXIT_FAILURE);
-    }
-    else
-    {
-        printf("queue created successfully\n");
-    }
+    /*message queue creating*/
+    messageQueue_Init(&mq_gyro, &mq_gyro_attr);
     
     /*signal catching*/
     signal(SIGINT, signalHandler);
@@ -250,7 +234,23 @@ static void semaphore_Close(const char *sem_Name, sem_t *sem_d)
 
 void messageQueue_Init(mqd_t *mqd_ptr, struct mq_attr *attr_ptr)
 {
-
+    attr_ptr->mq_flags = 0;
+    attr_ptr->mq_maxmsg = MQ_QUEUE_SIZE;
+    attr_ptr->mq_msgsize = MQ_MSG_SIZE;
+    attr_ptr->mq_curmsgs = 0;
+    
+    /*message queue creating*/
+    *mqd_ptr = mq_open(MQ_NAME, O_CREAT | O_WRONLY, 0644, attr_ptr);
+    if(*mqd_ptr == -1)
+    {
+        printf("msg queue create fail\n");
+        perror("mq_open");
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        printf("queue created successfully\n");
+    }
 }
 
 static void messageQueue_Close(const char *mq_Name, mqd_t mq_d)
