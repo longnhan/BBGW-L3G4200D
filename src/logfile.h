@@ -25,7 +25,8 @@ void *logData(void *ptr);
 void signalHandler(int sig);
 
 void messageQueue_Init(mqd_t *mqd_ptr, struct mq_attr *attr_ptr);
-void messageQueue_Register_Notify(mqd_t mqd, struct sigevent *sig_ptr);
+void messageQueue_Close(const char *mq_Name, mqd_t mq_d);
+static void messageQueue_Register_Notify(mqd_t mqd, struct sigevent *sig_ptr);
 
 static int bufferToData(char *ptr, int16_t *x, int16_t *y, int16_t *z, int8_t *temp);
 static void printDateTime(FILE *file);

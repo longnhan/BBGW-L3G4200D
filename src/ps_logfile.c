@@ -48,8 +48,8 @@ int main()
     pthread_join(thrd_Log_Data, NULL);
     
     /* Close the message queue */
-    mq_close(mq_gyro);
-    mq_unlink(MQ_NAME);
+    messageQueue_Close(MQ_NAME, mq_gyro);
+
 
     return 0;
 }
@@ -86,9 +86,8 @@ void *logData(void *ptr)
         printf("Waiting for messages...\n");
         pause();
     }
-    mq_close(mq_gyro);
-    mq_unlink(MQ_NAME);
-    
+    messageQueue_Close(MQ_NAME, mq_gyro);
+
     return NULL;
 }
 
@@ -119,8 +118,7 @@ void signalHandler(int sig)
     else if(sig == SIGINT)
     {
         printf("\nCaught SIGINT, cleaning up...\n");
-        mq_close(mq_gyro);
-        mq_unlink(MQ_NAME);
+        messageQueue_Close(MQ_NAME, mq_gyro);
         fclose(fp);
         exit(EXIT_SUCCESS);
     }
@@ -196,7 +194,13 @@ void messageQueue_Init(mqd_t *mqd_ptr, struct mq_attr *attr_ptr)
     }
 }
 
-void messageQueue_Register_Notify(mqd_t mqd, struct sigevent *sig_ptr)
+void messageQueue_Close(const char *mq_Name, mqd_t mq_d)
+{
+    mq_close(mq_d);
+    mq_unlink(mq_Name);
+}
+
+static void messageQueue_Register_Notify(mqd_t mqd, struct sigevent *sig_ptr)
 {
     sig_ptr->sigev_notify = SIGEV_SIGNAL;
     sig_ptr->sigev_signo = SIGUSR1;
@@ -205,7 +209,7 @@ void messageQueue_Register_Notify(mqd_t mqd, struct sigevent *sig_ptr)
     {
         printf("msg queue notify SIGUSR1 create fail\n");
         perror("mq_notify");
-        mq_close(mq_gyro);
+        messageQueue_Close(MQ_NAME, mq_gyro);
         exit(EXIT_FAILURE);
     }
     else

@@ -253,7 +253,7 @@ void messageQueue_Init(mqd_t *mqd_ptr, struct mq_attr *attr_ptr)
     }
 }
 
-static void messageQueue_Close(const char *mq_Name, mqd_t mq_d)
+void messageQueue_Close(const char *mq_Name, mqd_t mq_d)
 {
     mq_close(mq_d);
     mq_unlink(mq_Name);
