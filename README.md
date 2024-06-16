@@ -4,9 +4,9 @@
 
 This project is an embedded Linux application tailored for the BeagleBone Green Wireless platform. 
 
-It facilitates seamless communication with an L3G4200 gyroscope sensor via the I2C interface and POSIX IPC such as semaphore, message queue, multithread,.. 
+It facilitates seamless communication with an L3G4200 gyroscope sensor via the I2C interface and POSIX IPC such as semaphore, signal, message queue, multithread,.. 
 
-Developed entirely from scratch, this project provides a robust foundation for interfacing with sensors and collecting data in embedded systems.
+Developed entirely from scratch, this project provides a robust foundation for interfacing with sensors and collecting data in embedded Linux systems.
 
 ### Setup
 
