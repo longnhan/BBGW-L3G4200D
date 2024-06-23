@@ -78,6 +78,15 @@ int main(void)
     return 0;    
 }
 
+/**
+ * @brief thread function run once,
+ * set sensor device working mode
+ * get process working path
+ * get log file's path
+ * 
+ * @param ptr 
+ * @return void* 
+ */
 void *systemInit(void *ptr)
 {
     uint8_t ret_i2c = 1;
@@ -96,6 +105,16 @@ void *systemInit(void *ptr)
     return NULL;
 }
 
+/**
+ * @brief thread function, called cyclically,
+ * get sensor data,
+ * print to the terminal,
+ * convert data to buffer
+ * send buffer to message queue
+ * 
+ * @param ptr 
+ * @return void* NULL
+ */
 void *readSensorData(void *ptr)
 {
     while (1)
@@ -138,6 +157,12 @@ void *readSensorData(void *ptr)
     return NULL;
 }
 
+/**
+ * @brief thread function to call another process
+ * fork the current thread then execlp by other application
+ * @param ptr 
+ * @return void* NULL
+ */
 void *logProcessCall(void *ptr)
 {
     pid_t pid = fork();
@@ -156,6 +181,11 @@ void *logProcessCall(void *ptr)
     return NULL;
 }
 
+/**
+ * @brief signal handler function
+ * actions for SIGUSR1 and SIGINT
+ * @param sig type of signal
+ */
 void signalHandler(int sig)
 {
     if(sig == SIGINT)
@@ -172,6 +202,16 @@ void signalHandler(int sig)
     }
 }
 
+/**
+ * @brief convert singles sensor data into a buffer
+ * 
+ * @param ptr point to the buffer which used to write to queue
+ * @param x axis sensor data
+ * @param y axis sensor data
+ * @param z axis sensor data
+ * @param temp temperature sensor
+ * @return int 0
+ */
 static int dataToBuffer(char *ptr, int16_t x, int16_t y, int16_t z, int16_t temp)
 {
     if(ptr == NULL)
@@ -189,6 +229,16 @@ static int dataToBuffer(char *ptr, int16_t x, int16_t y, int16_t z, int16_t temp
     return 0;
 }
 
+/**
+ * @brief read sensor data
+ * 
+ * @param x axis sensor data
+ * @param y axis sensor data
+ * @param z axis sensor data
+ * @param temp temperature sensor
+ * @param name device name in register
+ * @return 0
+ */
 static int getSensorData(int16_t *x, int16_t *y, int16_t *z, int8_t *temp, uint8_t *name)
 {
     if(x == NULL | y == NULL | z == NULL | temp == NULL | name ==  NULL)
@@ -214,6 +264,13 @@ static void waitToStart(void)
     scanf("%s", str_test); //test
 }
 
+/**
+ * @brief create a named semaphore
+ * 
+ * @param sem_Name name of the semaphore
+ * @param sem_d points to semaphore descriptor
+ * @return 0
+ */
 static int semaphore_Init(char *sem_Name, sem_t **sem_d)
 {
     semaphore_Close(sem_Name, sem_d);
@@ -226,12 +283,24 @@ static int semaphore_Init(char *sem_Name, sem_t **sem_d)
     return 0;
 }
 
+/**
+ * @brief close and unlink named semaphore
+ * 
+ * @param sem_Name semaphore name
+ * @param sem_d semaphore descriptor
+ */
 static void semaphore_Close(const char *sem_Name, sem_t *sem_d)
 {
     sem_close(sem_d);
     sem_unlink(sem_Name);
 }
 
+/**
+ * @brief create a message queue base on default attributes
+ * 
+ * @param mqd_ptr point to message queue descriptor
+ * @param attr_ptr point to message queue attributes
+ */
 void messageQueue_Init(mqd_t *mqd_ptr, struct mq_attr *attr_ptr)
 {
     attr_ptr->mq_flags = 0;
@@ -253,12 +322,23 @@ void messageQueue_Init(mqd_t *mqd_ptr, struct mq_attr *attr_ptr)
     }
 }
 
+/**
+ * @brief close and unlink passed message queue
+ * 
+ * @param mq_Name message queue name
+ * @param mq_d message queue descriptor
+ */
 void messageQueue_Close(const char *mq_Name, mqd_t mq_d)
 {
     mq_close(mq_d);
     mq_unlink(mq_Name);
 }
 
+/**
+ * @brief local function used to get process's working path
+ * 
+ * @param fname file name
+ */
 static void curWorkingPath(char *fname)
 {
     char cwp[PATH_MAX] = {0};

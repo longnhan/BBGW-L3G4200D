@@ -54,6 +54,12 @@ int main()
     return 0;
 }
 
+/**
+ * @brief Create a log file as LOGFILE_NAME macro
+ * 
+ * @param ptr points to file descriptor
+ * @return void* 
+ */
 void *createFile(void *ptr)
 {
     fp = fopen(LOGFILE_NAME, "w+");
@@ -69,6 +75,12 @@ void *createFile(void *ptr)
     return NULL;
 }
 
+/**
+ * @brief thread function used to log sensor data into file
+ * 
+ * @param ptr points to file descriptor
+ * @return void* NULL
+ */
 void *logData(void *ptr)
 {   
     static uint8_t count  = 1;
@@ -91,6 +103,11 @@ void *logData(void *ptr)
     return NULL;
 }
 
+/**
+ * @brief signal handler function
+ * actions for SIGUSR1 and SIGINT
+ * @param sig type of signal
+ */
 void signalHandler(int sig)
 {
     printf("get signal for new message queue\n");
@@ -125,6 +142,16 @@ void signalHandler(int sig)
     
 }
 
+/**
+ * @brief convert input buffer get from message queue to x, y, z, and temperature data
+ * 
+ * @param ptr buffer read from message queue
+ * @param x axis sensor data
+ * @param y axis sensor data
+ * @param z axis sensor data
+ * @param temp temperature sensor
+ * @return int 0 when success
+ */
 static int bufferToData(char *ptr, int16_t *x, int16_t *y, int16_t *z, int8_t *temp)
 {
     if(ptr == NULL | x == NULL | y == NULL | z == NULL | temp == NULL)
@@ -142,6 +169,11 @@ static int bufferToData(char *ptr, int16_t *x, int16_t *y, int16_t *z, int8_t *t
     return 0;
 }
 
+/**
+ * @brief local function get and print date and time
+ * 
+ * @param fp file descriptor where time data will print to
+ */
 static void printDateTime(FILE *fp)
 {
     time_t now = time(NULL);
@@ -150,6 +182,11 @@ static void printDateTime(FILE *fp)
     fprintf(fp, "Date and Time: %s\n", time_str);
 }
 
+/**
+ * @brief local function used to get process's working path
+ * 
+ * @param fname file name
+ */
 static void curWorkingPath(char *fname)
 {
     char cwp[PATH_MAX] = {0};
@@ -167,12 +204,22 @@ static void curWorkingPath(char *fname)
     }
 }
 
+/**
+ * @brief firstly setup before running the process, 
+ * get process working path
+ */
 void processSetup(void)
 {
     /*get working path*/
     curWorkingPath(LOGFILE_NAME);
 }
 
+/**
+ * @brief create a message queue base on default attributes
+ * 
+ * @param mqd_ptr point to message queue descriptor
+ * @param attr_ptr point to message queue attributes
+ */
 void messageQueue_Init(mqd_t *mqd_ptr, struct mq_attr *attr_ptr)
 {
     attr_ptr->mq_flags = 0;
@@ -194,12 +241,24 @@ void messageQueue_Init(mqd_t *mqd_ptr, struct mq_attr *attr_ptr)
     }
 }
 
+/**
+ * @brief close and unlink passed message queue
+ * 
+ * @param mq_Name message queue name
+ * @param mq_d message queue descriptor
+ */
 void messageQueue_Close(const char *mq_Name, mqd_t mq_d)
 {
     mq_close(mq_d);
     mq_unlink(mq_Name);
 }
 
+/**
+ * @brief register notification via SIGUSR1 for message queue
+ * 
+ * @param mqd message queue descriptor
+ * @param sig_ptr point to a sigevent struct
+ */
 static void messageQueue_Register_Notify(mqd_t mqd, struct sigevent *sig_ptr)
 {
     sig_ptr->sigev_notify = SIGEV_SIGNAL;

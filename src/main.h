@@ -14,10 +14,15 @@
 #include <semaphore.h>
 #include <linux/limits.h>
 
+/*message name*/
 #define MQ_NAME             "/myQueue"
+/*semaphore name*/
 #define SEM_MQ_NAME         "/semaphore_Msg_Queue"
+/*number of a semaphore*/
 #define SEM_NUMBER          1
+/*number of message in a queue*/
 #define MQ_QUEUE_SIZE       10
+/*message size*/
 #define MQ_MSG_SIZE         1024
 
 #define AUTO_START_PROCESS

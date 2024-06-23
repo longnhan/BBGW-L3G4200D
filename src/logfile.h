@@ -13,8 +13,11 @@
 #include <time.h>
 #include <linux/limits.h>
 
+/*message name*/
 #define MQ_NAME         "/myQueue"
+/*number of message in a queue*/
 #define MQ_QUEUE_SIZE        10
+/*message size*/
 #define MQ_MSG_SIZE         1024
 
 
